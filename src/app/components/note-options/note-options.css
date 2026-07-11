@@ -32,3 +32,16 @@
     margin-right: 10px;
 
 }
+
+/* Modo escuro */
+
+:host-context(.dark-theme) {
+    background-color: #1b1e29;
+    border-color: #2b303b;
+    color: #f3f5f8;
+}
+
+:host-context(.dark-theme) button {
+    border-color: #2b303b;
+    color: #f3f5f8;
+}

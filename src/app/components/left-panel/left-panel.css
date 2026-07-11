@@ -83,3 +83,26 @@
     font-weight: bold;
 
 }
+
+/* Modo escuro */
+
+:host-context(.dark-theme) {
+    background-color: #1b1e29;
+    border-color: #2b303b;
+}
+
+:host-context(.dark-theme) .buttons-container,
+:host-context(.dark-theme) .tags-container .tag {
+    color: #f3f5f8;
+    border-color: #2b303b;
+}
+
+:host-context(.dark-theme) .buttons-container button,
+:host-context(.dark-theme) .tags-container button {
+    color: #f3f5f8;
+}
+
+:host-context(.dark-theme) .buttons-container button:hover,
+:host-context(.dark-theme) .tags-container button:hover {
+    background-color: #2b303b;
+}

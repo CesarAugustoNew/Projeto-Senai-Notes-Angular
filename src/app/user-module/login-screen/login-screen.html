@@ -1,4 +1,6 @@
 <div class="page__mask">
+  <theme-toggle class="theme-toggle__fixed"></theme-toggle>
+
   <div class="form__container" [class.invalid]="form.invalid && (form.touched || form.dirty)">
     <img src="/assets/logo.svg" alt="Logo do Senai Notes.">
 
@@ -29,7 +31,9 @@
         <span *ngIf="password?.errors?.['required']">Informe a senha.</span>
       </div>
 
-      <button type="submit" (click)="onLoginClick()">Entrar</button>
+      <button type="submit" (click)="onLoginClick()" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Entrando...' : 'Entrar' }}
+      </button>
 
       <p class="form__hint">
         Ainda nao possui conta? <a routerLink="/new-user" href="/new-user">Cadastre-se</a>

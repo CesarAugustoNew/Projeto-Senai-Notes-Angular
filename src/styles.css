@@ -57,3 +57,18 @@ button {
     animation-duration: 0.5s;
 
 }
+
+/* Modo escuro (classe aplicada em <html> pelo ThemeService) */
+
+html.dark-theme {
+    color-scheme: dark;
+}
+
+html.dark-theme body {
+    background-color: #12141c;
+}
+
+html.dark-theme .btn__secondary {
+    background-color: #2b303b;
+    color: #f3f5f8;
+}

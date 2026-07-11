@@ -94,3 +94,28 @@
     color: black;
 
 }
+
+/* Modo escuro */
+
+:host-context(.dark-theme) {
+    background-color: #1b1e29;
+    border-color: #2b303b;
+    color: #f3f5f8;
+}
+
+:host-context(.dark-theme) .note__item {
+    border-color: #2b303b;
+}
+
+:host-context(.dark-theme) .note__item:hover {
+    background-color: #2b303b;
+}
+
+:host-context(.dark-theme) .note__item .tags span {
+    background-color: #2b303b;
+    color: #f3f5f8;
+}
+
+:host-context(.dark-theme) .note__item .date {
+    color: #a7adba;
+}

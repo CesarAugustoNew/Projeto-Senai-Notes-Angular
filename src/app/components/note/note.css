@@ -116,3 +116,60 @@
 
     gap: 10px;
 }
+
+/*
+  Estado vazio (nenhuma nota selecionada), agora como uma marca
+  d'água — ícone grande e texto discreto ocupando o espaço todo —
+  em vez de um simples parágrafo de texto.
+*/
+.empty__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+
+    width: 100%;
+    height: 100%;
+
+    color: #E0E4EA;
+    user-select: none;
+}
+
+.empty__state i {
+    font-size: 96px;
+}
+
+.empty__state span {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Modo escuro */
+
+:host-context(.dark-theme) {
+    background-color: #1b1e29;
+    color: #f3f5f8;
+}
+
+:host-context(.dark-theme) .title,
+:host-context(.dark-theme) .info__item input {
+    background-color: transparent;
+    color: #f3f5f8;
+}
+
+:host-context(.dark-theme) textarea {
+    background-color: transparent;
+    color: #f3f5f8;
+    border-color: #2b303b;
+}
+
+:host-context(.dark-theme) .buttons__container {
+    border-color: #2b303b;
+}
+
+:host-context(.dark-theme) .empty__state {
+    color: #2b303b;
+}

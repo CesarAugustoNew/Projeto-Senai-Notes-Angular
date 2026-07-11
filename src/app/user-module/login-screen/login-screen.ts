@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
+import { ThemeToggle } from '../../components/theme-toggle/theme-toggle';
 
 interface LoginResponse {
   accessToken?: string;
@@ -16,13 +17,20 @@ interface LoginResponse {
 @Component({
   selector: 'app-login-screen',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ThemeToggle],
   templateUrl: './login-screen.html',
   styleUrls: ['./login-screen.css']
 })
 export class LoginScreen {
   form: FormGroup;
-  isSubmitting = false;
+
+  // Signal em vez de propriedade comum: o app usa
+  // provideZonelessChangeDetection(), então uma mudança de estado
+  // feita depois de um `await` (fora de um evento do template) só
+  // atualiza a tela de forma confiável se passar por um signal.
+  // Antes disso o botão podia continuar com aparência de "carregando"
+  // (ou nada parecer acontecer) mesmo depois da resposta chegar.
+  isSubmitting = signal(false);
 
   constructor(private fb: FormBuilder, private router: Router, private http: HttpClient) {
     this.form = this.fb.group({
@@ -41,18 +49,22 @@ export class LoginScreen {
       return;
     }
 
-    if (this.isSubmitting) {
+    if (this.isSubmitting()) {
       return;
     }
 
     const email = String(this.email?.value || '');
     const password = String(this.password?.value || '');
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
 
     try {
       const response = await firstValueFrom(
         this.http.post<LoginResponse>('https://senai-gpt-api.azurewebsites.net/login', { email, password })
+          // Sem timeout, se a API demorar (ex.: "acordando" de um plano
+          // gratuito que hiberna quando fica sem uso) a tela ficava
+          // travada indefinidamente, parecendo que "não vai".
+          .pipe(timeout(20000))
       );
 
       window.alert('Login realizado com sucesso!');
@@ -70,13 +82,20 @@ export class LoginScreen {
 
       this.router.navigateByUrl('/notes');
     } catch (error) {
-      const httpError = error as HttpErrorResponse;
-      const message = typeof httpError?.error?.error === 'string'
-        ? httpError.error.error
-        : 'Falha ao realizar login.';
+      let message = 'Falha ao realizar login.';
+
+      if ((error as { name?: string })?.name === 'TimeoutError') {
+        message = 'O servidor demorou demais para responder. Ele pode estar "acordando" — aguarde alguns segundos e tente novamente.';
+      } else {
+        const httpError = error as HttpErrorResponse;
+        if (typeof httpError?.error?.error === 'string') {
+          message = httpError.error.error;
+        }
+      }
+
       window.alert(message);
     } finally {
-      this.isSubmitting = false;
+      this.isSubmitting.set(false);
     }
   }
 }

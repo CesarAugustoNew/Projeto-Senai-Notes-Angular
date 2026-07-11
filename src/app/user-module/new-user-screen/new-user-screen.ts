@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
+import { ThemeToggle } from '../../components/theme-toggle/theme-toggle';
 
 interface CreateUserResponse {
   [key: string]: unknown;
@@ -12,13 +13,17 @@ interface CreateUserResponse {
 @Component({
   selector: 'app-new-user',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ThemeToggle],
   templateUrl: './new-user-screen.html',
   styleUrls: ['./new-user-screen.css']
 })
 export class NewUserScreen {
   form: FormGroup;
-  isSubmitting = false;
+
+  // Signal pelo mesmo motivo do login: garante que a UI (botão)
+  // reflita corretamente o estado depois de um `await`, mesmo com
+  // provideZonelessChangeDetection() habilitado no app.
+  isSubmitting = signal(false);
 
   constructor(private fb: FormBuilder, private router: Router, private http: HttpClient) {
     this.form = this.fb.group({
@@ -39,7 +44,7 @@ export class NewUserScreen {
       return;
     }
 
-    if (this.isSubmitting) {
+    if (this.isSubmitting()) {
       return;
     }
 
@@ -47,23 +52,31 @@ export class NewUserScreen {
     const email = String(this.email?.value || '');
     const password = String(this.password?.value || '');
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
 
     try {
       await firstValueFrom(
         this.http.post<CreateUserResponse>('https://senai-gpt-api.azurewebsites.net/users', { name, email, password })
+          .pipe(timeout(20000))
       );
 
       window.alert('Usuario cadastrado com sucesso!');
       this.router.navigateByUrl('/login');
     } catch (error) {
-      const httpError = error as HttpErrorResponse;
-      const message = typeof httpError?.error?.error === 'string'
-        ? httpError.error.error
-        : 'Erro ao cadastrar o usuario, tente novamente.';
+      let message = 'Erro ao cadastrar o usuario, tente novamente.';
+
+      if ((error as { name?: string })?.name === 'TimeoutError') {
+        message = 'O servidor demorou demais para responder. Ele pode estar "acordando" — aguarde alguns segundos e tente novamente.';
+      } else {
+        const httpError = error as HttpErrorResponse;
+        if (typeof httpError?.error?.error === 'string') {
+          message = httpError.error.error;
+        }
+      }
+
       window.alert(message);
     } finally {
-      this.isSubmitting = false;
+      this.isSubmitting.set(false);
     }
   }
 }
