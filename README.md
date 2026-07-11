@@ -2,8 +2,6 @@
  
 Senai Notes é uma aplicação web que implementa a experiência de criar, organizar e revisar notas com Angular 20. O foco é fornecer uma interface moderna para usuários autenticados gerenciarem suas anotações em qualquer dispositivo.
 
-Vercel - https://projeto-senai-notes-angular.vercel.app/
-
 ## Demonstração
 <img width="1916" height="916" alt="image" src="https://github.com/user-attachments/assets/40b53807-a63a-4db5-bcfe-d5ebed7e5fee" />
 <br>
