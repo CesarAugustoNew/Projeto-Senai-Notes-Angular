@@ -1,4 +1,6 @@
 <div class="page__mask">
+  <theme-toggle class="theme-toggle__fixed"></theme-toggle>
+
   <div class="form__container" [formGroup]="form">
     <img src="assets/logo.svg" alt="Logo do Senai Notes.">
 
@@ -41,7 +43,9 @@
       <span *ngIf="password?.errors?.['required']">Informe a senha.</span>
     </div>
 
-    <button (click)="onSignUpClick()">Cadastrar</button>
+    <button (click)="onSignUpClick()" [disabled]="isSubmitting()">
+      {{ isSubmitting() ? 'Cadastrando...' : 'Cadastrar' }}
+    </button>
 
     <p class="form__hint">
       Ja possui uma conta? <a routerLink="/login" href="/login">Entrar</a>

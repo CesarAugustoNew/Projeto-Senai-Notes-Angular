@@ -51,5 +51,8 @@
 </ng-container>
 
 <ng-template #nenhumaNota>
-  <p>Nenhuma nota selecionada no momento.</p>
+  <div class="empty__state" aria-hidden="true">
+    <i class="fa-solid fa-note-sticky"></i>
+    <span>Nenhuma nota selecionada</span>
+  </div>
 </ng-template>

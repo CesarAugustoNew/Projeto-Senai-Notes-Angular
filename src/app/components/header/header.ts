@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ThemeToggle } from '../theme-toggle/theme-toggle';
 
 @Component({
   selector: 'header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ThemeToggle],
   templateUrl: './header.html',
   styleUrls: ['./header.css']
 })

@@ -99,3 +99,29 @@
 .dropdown li:hover {
   background-color: #f0f0f0;
 }
+
+/* Modo escuro */
+
+:host-context(.dark-theme) .page__content__header {
+  border-color: #2b303b;
+  background-color: #1b1e29;
+  color: #f3f5f8;
+}
+
+:host-context(.dark-theme) .search__input {
+  background-color: #12141c;
+  border-color: #2b303b;
+}
+
+:host-context(.dark-theme) .search__input input {
+  color: #f3f5f8;
+}
+
+:host-context(.dark-theme) .dropdown {
+  background-color: #1b1e29;
+  border-color: #2b303b;
+}
+
+:host-context(.dark-theme) .dropdown li:hover {
+  background-color: #2b303b;
+}

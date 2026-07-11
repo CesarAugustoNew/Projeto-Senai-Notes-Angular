@@ -56,13 +56,22 @@ export class Note implements OnChanges {
   async onSaveNote(): Promise<void> {
     if (!this.notaSelecionada) return;
 
-    // Mantendo a mesma lógica do React: salva imagem "temporária" fixa
+    // Bug corrigido: antes, o campo "image" era sempre gravado como
+    // 'assets/sample.png' fixo, não importa qual foto o usuário
+    // escolhesse no input de arquivo. Agora, se uma nova imagem foi
+    // selecionada, ela é convertida para uma Data URL (base64) e
+    // essa é a imagem enviada; caso contrário, mantém a imagem que a
+    // nota já tinha.
+    const imagem = this.imageFile
+      ? await this.fileParaDataUrl(this.imageFile)
+      : (this.notaSelecionada.image ?? '');
+
     const payload: NoteModel = {
       ...this.notaSelecionada,
       title: this.title,
       description: this.description,
       tags: this.tags.split(',').map(t => t.trim()).filter(Boolean),
-      image: 'assets/sample.png',
+      image: imagem,
       date: new Date().toISOString()
     };
 
@@ -104,6 +113,17 @@ export class Note implements OnChanges {
     const file = input.files[0];
     this.imageFile = file;
     this.imageURL = URL.createObjectURL(file);
+  }
+
+  // Converte o arquivo escolhido em uma Data URL (base64) para poder
+  // enviá-lo dentro do JSON da nota (a API espera "image" como string).
+  private fileParaDataUrl(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
   }
 
   // Helpers simples para “toasts” sem libs externas
