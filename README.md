@@ -1,6 +1,5 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/twbs/icons/main/icons/journal-text.svg" width="60" alt="Logo" />
-
+  
 # Senai Notes
 
 
