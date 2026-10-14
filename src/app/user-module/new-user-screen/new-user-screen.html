@@ -41,11 +41,31 @@
     </label>
     <div class="error" *ngIf="password?.touched && password?.invalid">
       <span *ngIf="password?.errors?.['required']">Informe a senha.</span>
+      <span *ngIf="password?.errors?.['minlength']">A senha deve ter no mínimo 6 caracteres.</span>
+      <span *ngIf="password?.errors?.['pattern']">A senha deve ter ao menos uma letra maiúscula.</span>
+    </div>
+
+    <label>
+      Confirmar senha
+      <input
+        type="password"
+        placeholder="Digite a senha novamente"
+        autocomplete="new-password"
+        formControlName="confirmPassword">
+    </label>
+    <div class="error" *ngIf="confirmPassword?.touched && (confirmPassword?.errors?.['required'] || (form.errors?.['passwordMismatch'] && confirmPassword?.value))">
+      <span *ngIf="confirmPassword?.errors?.['required']">Confirme a senha.</span>
+      <span *ngIf="!confirmPassword?.errors?.['required'] && form.errors?.['passwordMismatch']">As senhas não coincidem.</span>
     </div>
 
     <button (click)="onSignUpClick()" [disabled]="isSubmitting()">
+      <span class="spinner" *ngIf="isSubmitting()" aria-hidden="true"></span>
       {{ isSubmitting() ? 'Cadastrando...' : 'Cadastrar' }}
     </button>
+
+    <p class="wake-hint" *ngIf="isWakingUp()" role="status">
+      O servidor estava em repouso e está acordando. Isso pode levar até 1 minuto na primeira vez — aguarde, por favor.
+    </p>
 
     <p class="form__hint">
       Ja possui uma conta? <a routerLink="/login" href="/login">Entrar</a>

@@ -32,8 +32,13 @@
       </div>
 
       <button type="submit" (click)="onLoginClick()" [disabled]="isSubmitting()">
+        <span class="spinner" *ngIf="isSubmitting()" aria-hidden="true"></span>
         {{ isSubmitting() ? 'Entrando...' : 'Entrar' }}
       </button>
+
+      <p class="wake-hint" *ngIf="isWakingUp()" role="status">
+        O servidor estava em repouso e está acordando. Isso pode levar até 1 minuto na primeira vez — aguarde, por favor.
+      </p>
 
       <p class="form__hint">
         Ainda nao possui conta? <a routerLink="/new-user" href="/new-user">Cadastre-se</a>

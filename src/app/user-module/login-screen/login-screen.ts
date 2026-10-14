@@ -34,6 +34,10 @@ export class LoginScreen {
   // (ou nada parecer acontecer) mesmo depois da resposta chegar.
   isSubmitting = signal(false);
 
+  // Fica true quando a API demora mais de 4s para responder
+  // (ex.: Render "acordando" depois de ~15 min sem uso).
+  isWakingUp = signal(false);
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -64,14 +68,15 @@ export class LoginScreen {
     const password = String(this.password?.value || '');
 
     this.isSubmitting.set(true);
+    const wakeTimer = setTimeout(() => this.isWakingUp.set(true), 4000);
 
     try {
       const response = await firstValueFrom(
         this.http.post<LoginResponse>(`${environment.apiUrl}/login`, { email, password })
           // Sem timeout, se a API demorar (ex.: "acordando" de um plano
           // gratuito que hiberna quando fica sem uso) a tela ficava
-          // travada indefinidamente, parecendo que "não vai".
-          .pipe(timeout(20000))
+          // travada indefinidamente. 60s cobre um cold start do Render.
+          .pipe(timeout(60000))
       );
 
       this.toast.success('Login realizado com sucesso!');
@@ -92,7 +97,7 @@ export class LoginScreen {
       let message = 'Falha ao realizar login.';
 
       if ((error as { name?: string })?.name === 'TimeoutError') {
-        message = 'O servidor demorou demais para responder. Ele pode estar "acordando" — aguarde alguns segundos e tente novamente.';
+        message = 'O servidor demorou demais para responder. Tente novamente em instantes.';
       } else {
         const httpError = error as HttpErrorResponse;
         if (typeof httpError?.error?.error === 'string') {
@@ -102,6 +107,8 @@ export class LoginScreen {
 
       this.toast.error(message);
     } finally {
+      clearTimeout(wakeTimer);
+      this.isWakingUp.set(false);
       this.isSubmitting.set(false);
     }
   }

@@ -102,8 +102,51 @@
 }
 
 .form__container button[disabled] {
-    opacity: 0.7;
-    cursor: not-allowed;
+    opacity: 0.85;
+}
+
+/* Botão: alinha o círculo girando ao lado do texto */
+.form__container button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.form__container button[disabled] {
+    cursor: wait;
+}
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Aviso exibido quando a API demora (servidor acordando) */
+.form__container .wake-hint {
+    width: 100%;
+    margin: -10px 0 16px;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 13px;
+    border-radius: 8px;
+    background: #fff7e0;
+    color: #6b4e00;
+}
+
+:host-context(.dark-theme) .form__container .wake-hint {
+    background: #2b2616;
+    color: #f0d68a;
 }
 
 /* Modo escuro */

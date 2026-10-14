@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom, timeout } from 'rxjs';
@@ -10,6 +10,13 @@ import { ToastService } from '../../toast/toast.service';
 
 interface CreateUserResponse {
   [key: string]: unknown;
+}
+
+// Validador do formulário inteiro: compara senha e confirmação.
+function passwordsMatch(group: AbstractControl): ValidationErrors | null {
+  const password = group.get('password')?.value;
+  const confirmPassword = group.get('confirmPassword')?.value;
+  return password === confirmPassword ? null : { passwordMismatch: true };
 }
 
 @Component({
@@ -27,6 +34,10 @@ export class NewUserScreen {
   // provideZonelessChangeDetection() habilitado no app.
   isSubmitting = signal(false);
 
+  // Fica true quando a API demora mais de 4s para responder
+  // (ex.: Render "acordando" depois de ~15 min sem uso).
+  isWakingUp = signal(false);
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -42,13 +53,16 @@ export class NewUserScreen {
       password: [
         '',
         [Validators.required, Validators.minLength(6), Validators.pattern(/[A-Z]/)]
-      ]
-    });
+      ],
+      // Digitar a senha duas vezes evita criar a conta com um erro de digitação.
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: passwordsMatch });
   }
 
   get name() { return this.form.get('name'); }
   get email() { return this.form.get('email'); }
   get password() { return this.form.get('password'); }
+  get confirmPassword() { return this.form.get('confirmPassword'); }
 
   private mensagemDeErroDaSenha(): string | null {
     const senha = this.password;
@@ -62,7 +76,11 @@ export class NewUserScreen {
   async onSignUpClick(): Promise<void> {
     if (!this.form.valid) {
       const erroSenha = this.mensagemDeErroDaSenha();
-      this.toast.error(erroSenha ?? 'Preencha os campos corretamente.');
+      const mensagem = erroSenha
+        ?? (this.form.errors?.['passwordMismatch'] && this.confirmPassword?.value
+          ? 'As senhas não coincidem.'
+          : 'Preencha os campos corretamente.');
+      this.toast.error(mensagem);
       this.form.markAllAsTouched();
       return;
     }
@@ -76,11 +94,12 @@ export class NewUserScreen {
     const password = String(this.password?.value || '');
 
     this.isSubmitting.set(true);
+    const wakeTimer = setTimeout(() => this.isWakingUp.set(true), 4000);
 
     try {
       await firstValueFrom(
         this.http.post<CreateUserResponse>(`${environment.apiUrl}/users`, { name, email, password })
-          .pipe(timeout(20000))
+          .pipe(timeout(60000))
       );
 
       this.toast.success('Usuário cadastrado com sucesso!');
@@ -89,7 +108,7 @@ export class NewUserScreen {
       let message = 'Erro ao cadastrar o usuario, tente novamente.';
 
       if ((error as { name?: string })?.name === 'TimeoutError') {
-        message = 'O servidor demorou demais para responder. Ele pode estar "acordando" — aguarde alguns segundos e tente novamente.';
+        message = 'O servidor demorou demais para responder. Tente novamente em instantes.';
       } else {
         const httpError = error as HttpErrorResponse;
         // Erros de validação de campo (ex.: senha sem maiúscula) vêm em
@@ -108,6 +127,8 @@ export class NewUserScreen {
 
       this.toast.error(message);
     } finally {
+      clearTimeout(wakeTimer);
+      this.isWakingUp.set(false);
       this.isSubmitting.set(false);
     }
   }
