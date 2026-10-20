@@ -119,3 +119,43 @@
 :host-context(.dark-theme) .note__item .date {
     color: #a7adba;
 }
+
+/* Responsividade: no celular a lista ocupa a largura toda */
+@media (max-width: 900px) {
+
+    :host {
+        width: 100%;
+        padding: 16px;
+        border-right: none;
+    }
+
+    .notes__list {
+        padding-top: 12px;
+    }
+
+    .note__item {
+        height: 96px;
+    }
+
+    .note__item .image {
+        width: 64px;
+        min-width: 64px;
+        margin-left: 0;
+    }
+
+    .note__item .texts {
+        min-width: 0;
+    }
+
+    .note__item .texts .title {
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .note__item .tags {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}

@@ -1,5 +1,9 @@
 <nav class="page__content__header">
   <div class="left">
+    <!-- Abre o painel de filtros (so aparece no celular) -->
+    <button class="menu__toggle" (click)="abrirMenu.emit()" aria-label="Abrir menu">
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
     <p>{{ somenteArquivadas ? 'Somente arquivadas' : 'Todas as notas' }}{{ tag ? (' - ' + tag) : '' }}</p>
   </div>
 
@@ -21,8 +25,8 @@
     <div class="user__menu"
          (mouseenter)="showDropdown()"
          (mouseleave)="hideDropdown()">
-      <button>
-        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      <button (click)="showDropdown()" aria-label="Menu do usuario">
+        <i class="fa-solid fa-circle-user" aria-hidden="true"></i>
       </button>
 
       <div class="dropdown" *ngIf="isDropdownVisible">

@@ -1,20 +1,26 @@
 <div class="page__container">
   <!-- Painel esquerdo com filtros -->
   <left-panel
+    [class.aberto]="menuAberto"
     [atualizarLista]="atualizarLista"
     (enviarTag)="onEnviarTag($event)"
     (listarSomenteArquivadas)="onListarSomenteArquivadas($event)">
   </left-panel>
+
+  <!-- Fundo escuro atras do painel no celular (toque fecha o menu) -->
+  <div class="menu__backdrop" *ngIf="menuAberto" (click)="menuAberto = false"></div>
 
   <div class="page__content">
     <!-- Cabecalho -->
     <header
       [somenteArquivadas]="somenteArquivadas"
       [tag]="tag"
-      [(termoPesquisado)]="termoPesquisado">
+      [(termoPesquisado)]="termoPesquisado"
+      (abrirMenu)="menuAberto = true">
     </header>
 
-    <div class="page__content__main">
+    <!-- com-nota: no celular, troca a lista pela nota aberta -->
+    <div class="page__content__main" [class.com-nota]="nota">
       <notes-list
         (enviarNota)="onEnviarNota($event)"
         [tagSelecionada]="tag"

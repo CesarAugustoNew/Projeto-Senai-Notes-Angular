@@ -11,6 +11,26 @@
 
 }
 
+.page__content__header .left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* Botao que abre o painel lateral: so aparece no celular */
+.menu__toggle {
+    display: none;
+    background-color: transparent;
+    border: none;
+    padding: 8px;
+}
+
+.menu__toggle i {
+    color: #717784;
+    font-size: 20px;
+}
+
 .page__content__header .left p {
 
     font-size: 24px;
@@ -124,4 +144,43 @@
 
 :host-context(.dark-theme) .dropdown li:hover {
   background-color: #2b303b;
+}
+
+
+/* Responsividade: tablets e celulares */
+@media (max-width: 900px) {
+
+    .page__content__header {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 12px 16px;
+        gap: 10px;
+    }
+
+    .menu__toggle {
+        display: flex;
+    }
+
+    .page__content__header .left {
+        flex: 1;
+    }
+
+    .page__content__header .left p {
+        font-size: 18px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Os itens da direita entram direto na linha do cabecalho... */
+    .right {
+        display: contents;
+    }
+
+    /* ...e a busca desce para uma linha propria, ocupando a largura toda */
+    .search__input {
+        order: 3;
+        flex-basis: 100%;
+        min-width: 0;
+    }
 }

@@ -22,3 +22,44 @@
     width: 100%;
 
 }
+
+/* Fundo escuro atras do painel lateral (so usado no celular) */
+.menu__backdrop {
+    display: none;
+}
+
+/* Responsividade: tablets e celulares */
+@media (max-width: 900px) {
+
+    /* O painel lateral vira gaveta, entao o conteudo ocupa a tela toda */
+    .page__content {
+        padding-left: 0;
+    }
+
+    .menu__backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 40;
+    }
+
+    /* Mostra a lista OU a nota aberta, nunca as duas lado a lado */
+    .page__content__main {
+        flex-direction: column;
+    }
+
+    .page__content__main note,
+    .page__content__main note-options {
+        display: none;
+    }
+
+    .page__content__main.com-nota notes-list {
+        display: none;
+    }
+
+    .page__content__main.com-nota note,
+    .page__content__main.com-nota note-options {
+        display: flex;
+    }
+}

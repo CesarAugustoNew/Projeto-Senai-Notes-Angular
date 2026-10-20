@@ -15,6 +15,7 @@ export class Header {
   @Input() tag: string = '';
   @Input() termoPesquisado: string = '';
   @Output() termoPesquisadoChange = new EventEmitter<string>();
+  @Output() abrirMenu = new EventEmitter<void>();
 
   // Funcao de logout: limpa o localStorage e redireciona
   onLogoutClick(): void {

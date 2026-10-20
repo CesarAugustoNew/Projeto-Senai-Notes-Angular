@@ -28,14 +28,17 @@ export class NotesScreen {
   nota: NoteModel | null = null;
   somenteArquivadas: boolean = false;
   atualizarLista = 0;
+  menuAberto = false; // painel esquerdo no celular
 
   // callbacks que espelham as props do React
   onEnviarTag(tag: any) {
     this.tag = tag ?? '';
+    this.menuAberto = false;
   }
 
   onListarSomenteArquivadas(arquivadas: any) {
     this.somenteArquivadas = !!arquivadas;
+    this.menuAberto = false;
   }
 
   onEnviarNota(nota: any | null) {

@@ -98,3 +98,13 @@
   color: #fff;
   background: rgba(255, 255, 255, 0.1);
 }
+
+/* Responsividade: no celular os avisos ocupam a largura da tela */
+@media (max-width: 600px) {
+  .toast-container {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    max-width: none;
+  }
+}

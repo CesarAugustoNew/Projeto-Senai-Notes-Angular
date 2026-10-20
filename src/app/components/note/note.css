@@ -173,3 +173,39 @@
 :host-context(.dark-theme) .empty__state {
     color: #2b303b;
 }
+
+/* Responsividade: no celular a nota aberta ocupa a tela toda */
+@media (max-width: 900px) {
+
+    :host {
+        width: 100%;
+        height: auto;
+        padding: 16px;
+    }
+
+    :host .image {
+        height: 200px;
+    }
+
+    :host .title {
+        width: 100%;
+        font-size: 20px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+
+    .info__item input {
+        flex: 1;
+        min-width: 0;
+    }
+
+    :host textarea {
+        height: auto;
+        min-height: 220px;
+    }
+
+    /* Salvar e Cancelar dividem a largura */
+    :host .buttons__container button {
+        flex: 1;
+    }
+}
