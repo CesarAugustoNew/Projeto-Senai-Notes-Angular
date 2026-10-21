@@ -7,6 +7,7 @@ import { firstValueFrom, timeout } from 'rxjs';
 import { ThemeToggle } from '../../components/theme-toggle/theme-toggle';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../../toast/toast.service';
+import { ThemeService } from '../../theme.service';
 
 interface CreateUserResponse {
   [key: string]: unknown;
@@ -42,7 +43,8 @@ export class NewUserScreen {
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
-    private toast: ToastService
+    private toast: ToastService,
+    public theme: ThemeService
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required]],

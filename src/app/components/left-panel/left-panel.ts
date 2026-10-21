@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
+import { ThemeService } from '../../theme.service';
 
 interface Tag {
   id: number | string;
@@ -19,7 +20,7 @@ export class LeftPanel implements OnInit, OnChanges {
   @Output() enviarTag = new EventEmitter<string | null>();
   @Output() listarSomenteArquivadas = new EventEmitter<boolean>();
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(private cd: ChangeDetectorRef, public theme: ThemeService) {}
 
   tags: Tag[] = [];
   selectedTagName: string = "";

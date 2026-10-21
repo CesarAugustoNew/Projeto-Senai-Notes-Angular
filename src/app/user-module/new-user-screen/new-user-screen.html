@@ -2,7 +2,7 @@
   <theme-toggle class="theme-toggle__fixed"></theme-toggle>
 
   <div class="form__container" [formGroup]="form">
-    <img src="assets/logo.svg" alt="Logo do Senai Notes.">
+    <img [src]="theme.isDark() ? 'assets/logo-dark.svg' : 'assets/logo.svg'" alt="Logo do Senai Notes.">
 
     <h1>Crie sua conta</h1>
     <p class="subtitle">
