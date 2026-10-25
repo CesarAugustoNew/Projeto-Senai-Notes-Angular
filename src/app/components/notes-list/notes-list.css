@@ -63,6 +63,9 @@
 
 .note__item .texts {
 
+    flex: 1;
+    min-width: 0;
+
     padding-top: 5px;
     padding-bottom: 5px;
 
@@ -78,14 +81,35 @@
     font-size: 20px;
     font-weight: bold;
 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+/* Etiquetas em uma unica linha: o excesso fica escondido em vez de
+   quebrar e sobrepor as outras */
+.note__item .tags {
+
+    display: flex;
+    gap: 5px;
+
+    overflow: hidden;
+
 }
 
 .note__item .tags span {
 
-    padding: 5px;
+    flex-shrink: 0;
+    max-width: 100%;
+
+    padding: 3px 6px;
     background-color: #e0e4ea;
     border-radius: 5px;
-    margin-right: 5px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
 }
 
@@ -143,19 +167,7 @@
         margin-left: 0;
     }
 
-    .note__item .texts {
-        min-width: 0;
-    }
-
     .note__item .texts .title {
         font-size: 16px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .note__item .tags {
-        white-space: nowrap;
-        overflow: hidden;
     }
 }

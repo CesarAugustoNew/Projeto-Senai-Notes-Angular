@@ -30,11 +30,9 @@ export class ThemeService {
     this.isDark.set(!this.isDark());
   }
 
+  // Sem preferencia salva (primeiro acesso ou depois do logout, que limpa
+  // o localStorage) o tema padrao e o claro, independente do sistema.
   private getInitialTheme(): boolean {
-    const salvo = localStorage.getItem(STORAGE_KEY);
-    if (salvo) {
-      return salvo === 'dark';
-    }
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+    return localStorage.getItem(STORAGE_KEY) === 'dark';
   }
 }
